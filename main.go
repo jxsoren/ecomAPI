@@ -4,49 +4,50 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Testing 123")
+	// Init Gin Router
+	router := gin.Default()
 
-	http.HandleFunc("/items", getItems)
-	http.HandleFunc("/items/", itemHandler)
-	http.HandleFunc("/", baseHandler)
+	// Routes
+	router.GET("/items", getItems)
+	router.GET("/items/:id", itemHandler)
+	router.POST("/items", itemHandler)
+	router.PUT("/items/:id", itemHandler)
+	router.DELETE("/items/:id", itemHandler)
+	router.GET("/", baseHandler)
 
+	// Server Startup
 	port := "8080"
-	newPort := ":" + port
 	fmt.Printf("Server is running on port %s ...\n", port)
-
-	log.Fatal(http.ListenAndServe(newPort, nil))
+	log.Fatal(router.Run(":" + port))
 }
 
-func getItems(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "GET" {
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
-		return
-	}
-	fmt.Fprintf(w, "Retrieving all items")
+func getItems(c *gin.Context) {
+	c.String(http.StatusOK, "Retrieving all items")
 }
 
-func itemHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
+func itemHandler(c *gin.Context) {
+	switch c.Request.Method {
 	case "GET":
-		// Handle GET for specific item
-		fmt.Fprintf(w, "Retrieving an item")
+		id := c.Param("id")
+		c.String(http.StatusOK, "Retrieving item with ID %s", id)
 	case "POST":
-		// Handle POST to create an item
-		fmt.Fprintf(w, "Creating an item")
+		c.String(http.StatusOK, "Creating an item")
 	case "PUT":
-		// Handle PUT to update an item
-		fmt.Fprintf(w, "Updating an item")
+		id := c.Param("id")
+		c.String(http.StatusOK, "Updating item with ID %s", id)
 	case "DELETE":
-		// Handle DELETE to delete an item
-		fmt.Fprintf(w, "Deleting an item")
+		id := c.Param("id")
+		c.String(http.StatusOK, "Deleting item with ID %s", id)
 	default:
-		http.Error(w, "Method is not supported.", http.StatusNotFound)
+		c.String(http.StatusMethodNotAllowed, "Method not allowed")
 	}
 }
 
-func baseHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello!!! 🐹 🐹 🐹 \n")
+func baseHandler(c *gin.Context) {
+	c.String(http.StatusOK, "Hello!!! 🐹 🐹 🐹 \n")
 }
