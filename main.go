@@ -1,11 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 type item struct {
@@ -22,6 +25,36 @@ var items = []item{
 }
 
 func main() {
+
+	// Load Env variabless
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env")
+	}
+
+	// DB Environment Variables
+	dbUsername := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
+
+	// DB Connection String
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s", dbUsername, dbPassword, dbHost, dbName)
+
+	// Connect to DB using DSN
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		log.Fatalf("Error opening DB: %v", err)
+	}
+	defer db.Close()
+
+	// Verify connection to DB
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Error connecting to DB: %v", err)
+	}
+
+	log.Println("Connection to DB is sucessful")
+
 	// Init Gin Router
 	router := gin.Default()
 
@@ -82,7 +115,22 @@ func itemHandler(c *gin.Context) {
 		})
 
 	case "PUT":
+		var item item
+
 		id := c.Param("id")
+
+		if err := c.BindJSON(&item); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		for i, item := range items {
+			if item.ID == id {
+				removeItem(items, i)
+
+			}
+		}
+
 		c.String(http.StatusOK, "Updating item with ID %s", id)
 	case "DELETE":
 		id := c.Param("id")
