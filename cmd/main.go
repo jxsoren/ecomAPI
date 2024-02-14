@@ -118,7 +118,7 @@ func getItems(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
 	}
 
-	// Return item in pretty printed JSON
+	// Return items in pretty printed JSON -- may need to return compact JSON in prod
 	c.IndentedJSON(http.StatusOK, productItem)
 }
 
