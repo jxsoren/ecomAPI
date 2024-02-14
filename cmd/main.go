@@ -110,14 +110,16 @@ func main() {
 }
 
 func getItems(c *gin.Context) {
-	var items []Item
-	results := db.Find(&items)
+	var productItem ProductItem
 
+	// Find all records from product_items table
+	results := db.Find(&productItem)
 	if results.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
 	}
 
-	c.IndentedJSON(http.StatusOK, items)
+	// Return item in pretty printed JSON
+	c.IndentedJSON(http.StatusOK, productItem)
 }
 
 func removeItem(s []Item, index int) []Item {
