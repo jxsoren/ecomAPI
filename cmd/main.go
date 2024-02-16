@@ -4,74 +4,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+
+	"ecommerce_api/initializers"
+	"ecommerce_api/models"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
-
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
 func init() {
-	var err error
-
-	// Load Env variabless
-	envErr := godotenv.Load()
-	if envErr != nil {
-		log.Fatal("Error loading .env")
-	}
-
-	fmt.Println("Env Loaded Successfully!")
-
-	// DB Environment Variables
-	dbUsername := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
-
-	// DB Connection String
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUsername, dbPassword, dbHost, dbName)
-	fmt.Println(dsn)
-
-	// Connect to DB using DSN
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("Error opening DB: %v", err)
-	}
-
-	// Try to get underlying MySQL db
-	sqlDB, err := db.DB()
-	if err != nil {
-		log.Fatalf("Failed to get underlying sql.DB: %v", err)
-	}
-
-	// Try to ping DB to verify connection
-	err = sqlDB.Ping()
-	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
-	} else {
-		fmt.Println("Successfully connected to the database")
-	}
-
-	// Creates Table (if it doesn't exist)
-	db.AutoMigrate(&ProductItem{})
-	if err != nil {
-		log.Fatalf("Error during migration: %v", err)
-	}
-
-	fmt.Println("Connected to DB")
-}
-
-type ProductItem struct {
-	ID          string `gorm:"primaryKey;type:varchar(100)" json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Price       int    `json:"price"`
-	Quantity    int    `json:"quantity"`
+	initializers.LoadEnvVars()
+	initializers.ConnectToDB()
 }
 
 type Item struct {
@@ -110,10 +53,10 @@ func main() {
 }
 
 func getItems(c *gin.Context) {
-	var productItem ProductItem
+	var productItem models.ProductItem
 
 	// Find all records from product_items table
-	results := db.Find(&productItem)
+	results := initializers.DB.Find(&productItem)
 	if results.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
 	}
@@ -140,7 +83,7 @@ func itemHandler(c *gin.Context) {
 		}
 	case "POST":
 
-		var productItem ProductItem
+		var productItem models.ProductItem
 
 		// Bind request body & check for errors
 		if err := c.BindJSON(&productItem); err != nil {
@@ -149,7 +92,7 @@ func itemHandler(c *gin.Context) {
 		}
 
 		// Insert new item into DB
-		result := db.Create(&productItem)
+		result := initializers.DB.Create(&productItem)
 		fmt.Println(productItem)
 
 		// Throw 500 error if creation fails
@@ -161,21 +104,17 @@ func itemHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, productItem)
 
 	case "PUT":
-		var item Item
+		var productItem models.ProductItem
 
 		id := c.Param("id")
 
-		if err := c.BindJSON(&item); err != nil {
+		// Handle error
+		if err := c.BindJSON(&productItem); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		for i, item := range items {
-			if item.ID == id {
-				removeItem(items, i)
-
-			}
-		}
+		// result := initializers.DB.Update()
 
 		c.String(http.StatusOK, "Updating item with ID %s", id)
 	case "DELETE":
