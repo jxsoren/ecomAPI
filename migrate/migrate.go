@@ -1,4 +1,4 @@
-package migrate
+package main
 
 import (
 	"ecommerce_api/initializers"
@@ -9,7 +9,7 @@ import (
 func init() {
 	// Load Env variables
 	initializers.LoadEnvVars()
-	initializers.LoadEnvVars()
+	initializers.ConnectToDB()
 
 }
 
