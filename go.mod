@@ -1,4 +1,4 @@
-module ecom_api
+module ecommerce_api
 
 go 1.21.6
 
