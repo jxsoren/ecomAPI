@@ -13,7 +13,6 @@ func SetupRouter() *gin.Engine {
 
 	v1Routes := apiRoutes.Group("/v1")
 	{
-
 		// Root Route
 		router.GET("/", controllers.BaseHandler)
 
@@ -59,7 +58,31 @@ func SetupRouter() *gin.Engine {
 
 			// Product Analyitics
 			productRoutes.GET("/:id/analyitics", controllers.BaseHandler) // (Admin Only)
+		}
 
+		userRoutes := v1Routes.Group("/users")
+		{
+			// User registration
+			userRoutes.POST("/signup", controllers.BaseHandler)
+
+			// User authentication
+			userRoutes.POST("/authentication", controllers.BaseHandler)
+			userRoutes.POST("logout", controllers.BaseHandler)
+
+			// Profile management
+			userRoutes.GET("/profile", controllers.BaseHandler)
+			userRoutes.PUT("/profile", controllers.BaseHandler)
+			userRoutes.DELETE("/profile", controllers.BaseHandler)
+
+			// Password management
+			userRoutes.POST("/forgot-password", controllers.BaseHandler)
+			userRoutes.POST("/reset-password", controllers.BaseHandler)
+
+			// User administration
+			userRoutes.GET("/users", controllers.BaseHandler)
+			userRoutes.GET("/users/:id", controllers.BaseHandler)
+			userRoutes.PUT("deactivate", controllers.BaseHandler)
+			userRoutes.PUT("activate", controllers.BaseHandler)
 		}
 
 	}
