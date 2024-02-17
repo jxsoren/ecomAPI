@@ -29,102 +29,101 @@ func SetupRouter() *gin.Engine {
 			productRoutes.DELETE("/:id", controllers.ProductsHandler) // (Admin Only)
 
 			// Product variants
-			productRoutes.GET("/:id/variants", controllers.BaseHandler)
-			productRoutes.POST("/:id/variants", controllers.BaseHandler)     // (Admin Only)
-			productRoutes.POST("/:id/variants/:id", controllers.BaseHandler) // (Admin Only)
-			productRoutes.POST("/:id/variants/:id", controllers.BaseHandler) // (Admin Only)
+			productRoutes.GET("/:id/variants")
+			productRoutes.POST("/:id/variants")     // (Admin Only)
+			productRoutes.POST("/:id/variants/:id") // (Admin Only)
+			productRoutes.POST("/:id/variants/:id") // (Admin Only)
 
 			// Product inventory
-			productRoutes.GET("/:id/stock", controllers.BaseHandler)
-			productRoutes.PUT("/:id/stock", controllers.BaseHandler) // (Admin Only)
+			productRoutes.GET("/:id/stock")
+			productRoutes.PUT("/:id/stock") // (Admin Only)
 
 			// Product offers/deals
-			productRoutes.GET("/offers", controllers.BaseHandler)
-			productRoutes.PUT("/:id/offer", controllers.BaseHandler) // (Admin Only)
+			productRoutes.GET("/offers")
+			productRoutes.PUT("/:id/offer") // (Admin Only)
 
 			// Rating and Reviews
-			productRoutes.GET("/reviews", controllers.BaseHandler)
-			productRoutes.GET("/:id/reviews", controllers.BaseHandler)
-			productRoutes.POST("/:id/reviews", controllers.BaseHandler)
-			productRoutes.PUT("/:id/reviews", controllers.BaseHandler)    // (Admin Only)
-			productRoutes.DELETE("/:id/reviews", controllers.BaseHandler) // (Admin Only)
+			productRoutes.GET("/reviews")
+			productRoutes.GET("/:id/reviews")
+			productRoutes.POST("/:id/reviews")
+			productRoutes.PUT("/:id/reviews")    // (Admin Only)
+			productRoutes.DELETE("/:id/reviews") // (Admin Only)
 
 			// Search/Query products
-			productRoutes.GET("/search", controllers.BaseHandler)
-			productRoutes.GET("/search/category", controllers.BaseHandler)
+			productRoutes.GET("/search")
+			productRoutes.GET("/search/category")
 
 			// Product Recommendations
-			productRoutes.GET("/recommendations", controllers.BaseHandler)
+			productRoutes.GET("/recommendations")
 
 			// Product Analyitics
-			productRoutes.GET("/:id/analyitics", controllers.BaseHandler) // (Admin Only)
+			productRoutes.GET("/:id/analyitics") // (Admin Only)
 		}
 
 		userRoutes := v1Routes.Group("/users")
 		{
 			// User registration
-			userRoutes.POST("/signup", controllers.BaseHandler)
+			userRoutes.POST("/signup")
 
 			// User authentication
-			userRoutes.POST("/authentication", controllers.BaseHandler)
-			userRoutes.POST("logout", controllers.BaseHandler)
+			userRoutes.POST("/authentication")
+			userRoutes.POST("logout")
 
 			// Profile management
-			userRoutes.GET("/profile", controllers.BaseHandler)
-			userRoutes.PUT("/profile", controllers.BaseHandler)
-			userRoutes.DELETE("/profile", controllers.BaseHandler)
+			userRoutes.GET("/profile")
+			userRoutes.PUT("/profile")
+			userRoutes.DELETE("/profile")
 
 			// Password management
-			userRoutes.POST("/forgot-password", controllers.BaseHandler)
-			userRoutes.POST("/reset-password", controllers.BaseHandler)
+			userRoutes.POST("/forgot-password")
+			userRoutes.POST("/reset-password")
 
 			// User administration
-			userRoutes.GET("/users", controllers.BaseHandler)
-			userRoutes.GET("/users/:id", controllers.BaseHandler)
-			userRoutes.PUT("deactivate", controllers.BaseHandler)
-			userRoutes.PUT("activate", controllers.BaseHandler)
+			userRoutes.GET("/users")     // (Admin Only)
+			userRoutes.GET("/users/:id") // (Admin Only)
+			userRoutes.PUT("deactivate") // (Admin Only)
+			userRoutes.PUT("activate")   // (Admin Only)
 		}
 
 		cartRoutes := v1Routes.Group("/cart")
 		{
 			// View cart
-			cartRoutes.GET("/", controllers.BaseHandler)
+			cartRoutes.GET("/")
 
 			// Get cart item count
-			cartRoutes.GET("/count", controllers.BaseHandler)
+			cartRoutes.GET("/count")
 
 			// Add, update and delete cart items
-			cartRoutes.POST("/add", controllers.BaseHandler)
-			cartRoutes.PUT("/update", controllers.BaseHandler)
-			cartRoutes.DELETE("/remove", controllers.BaseHandler)
+			cartRoutes.POST("/add")
+			cartRoutes.PUT("/update")
+			cartRoutes.DELETE("/remove")
 
 			// Empty cart
-			cartRoutes.POST("/cart/empty", controllers.BaseHandler)
+			cartRoutes.POST("/cart/empty")
 
 			// Checkout
-			cartRoutes.POST("cart/checkout", controllers.BaseHandler)
+			cartRoutes.POST("cart/checkout")
 		}
 
 		orderRoutes := v1Routes.Group("/orders")
 		{
 			// Create order
-			orderRoutes.POST("/", controllers.BaseHandler)
+			orderRoutes.POST("/")
 
 			// Get all orders
-			orderRoutes.GET("/", controllers.BaseHandler) // (Admin Only)
+			orderRoutes.GET("/") // (Admin Only)
 
 			// List all orders for user
-			orderRoutes.GET("/user/:id", controllers.BaseHandler)
+			orderRoutes.GET("/user/:id")
 
 			// Update order status
-			orderRoutes.PUT("/:id/status", controllers.BaseHandler)
+			orderRoutes.PUT("/:id/status")
 
 			// Cancel an order
-			orderRoutes.PUT("/:id/cancel", controllers.BaseHandler)
+			orderRoutes.PUT("/:id/cancel")
 
 			// Return order
-			orderRoutes.POST("/:id/return", controllers.BaseHandler)
-
+			orderRoutes.POST("/:id/return")
 		}
 
 	}
