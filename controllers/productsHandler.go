@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetItems(c *gin.Context) {
+func GetProducts(c *gin.Context) {
 	var productItem models.ProductItem
 
 	// Find all records from product_items table
@@ -22,7 +22,7 @@ func GetItems(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, productItem)
 }
 
-func ItemHandler(c *gin.Context) {
+func ProductsHandler(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
 		id := c.Param("id")
@@ -70,8 +70,4 @@ func ItemHandler(c *gin.Context) {
 	default:
 		c.String(http.StatusMethodNotAllowed, "Method not allowed")
 	}
-}
-
-func BaseHandler(c *gin.Context) {
-	c.String(http.StatusOK, "Hello!!! 🐹 🐹 🐹 \n")
 }

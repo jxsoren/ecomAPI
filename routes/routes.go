@@ -20,13 +20,13 @@ func SetupRouter() *gin.Engine {
 		productRoutes := v1Routes.Group("/products")
 		{
 			// Base route (get all products)
-			productRoutes.GET("/", controllers.GetItems)
+			productRoutes.GET("/", controllers.GetProducts)
 
 			// Create, Read, Update, Delete products
-			productRoutes.GET("/:id", controllers.ItemHandler)
-			productRoutes.POST("/", controllers.ItemHandler)      // (Admin Only)
-			productRoutes.PUT("/:id", controllers.ItemHandler)    // (Admin Only)
-			productRoutes.DELETE("/:id", controllers.ItemHandler) // (Admin Only)
+			productRoutes.GET("/:id", controllers.ProductsHandler)
+			productRoutes.POST("/", controllers.ProductsHandler)      // (Admin Only)
+			productRoutes.PUT("/:id", controllers.ProductsHandler)    // (Admin Only)
+			productRoutes.DELETE("/:id", controllers.ProductsHandler) // (Admin Only)
 
 			// Product variants
 			productRoutes.GET("/:id/variants", controllers.BaseHandler)
