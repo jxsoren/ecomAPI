@@ -105,6 +105,28 @@ func SetupRouter() *gin.Engine {
 			cartRoutes.POST("cart/checkout", controllers.BaseHandler)
 		}
 
+		orderRoutes := v1Routes.Group("/orders")
+		{
+			// Create order
+			orderRoutes.POST("/", controllers.BaseHandler)
+
+			// Get all orders
+			orderRoutes.GET("/", controllers.BaseHandler) // (Admin Only)
+
+			// List all orders for user
+			orderRoutes.GET("/user/:id", controllers.BaseHandler)
+
+			// Update order status
+			orderRoutes.PUT("/:id/status", controllers.BaseHandler)
+
+			// Cancel an order
+			orderRoutes.PUT("/:id/cancel", controllers.BaseHandler)
+
+			// Return order
+			orderRoutes.POST("/:id/return", controllers.BaseHandler)
+
+		}
+
 	}
 
 	return router
