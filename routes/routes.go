@@ -9,20 +9,20 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	// Product Item Routes
+	// Product Routes
 	productRoutes := router.Group("/products")
 	{
-		// Get all procuts
+		// Base route (get all products)
 		productRoutes.GET("/products", controllers.GetItems)
 
-		// Item ID Routes
+		// Path param routes (Create, Read, Update, Delete products)
 		productRoutes.GET("/products/:id", controllers.ItemHandler)
 		productRoutes.POST("/products", controllers.ItemHandler)
 		productRoutes.PUT("/products/:id", controllers.ItemHandler)
 		productRoutes.DELETE("/products/:id", controllers.ItemHandler)
 	}
 
-	// Base Route
+	// Root Route
 	router.GET("/", controllers.BaseHandler)
 
 	return router
