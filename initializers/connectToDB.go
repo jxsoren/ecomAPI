@@ -22,8 +22,7 @@ func ConnectToDB() {
 
 	// DB Connection String
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", dbUsername, dbPassword, dbHost, dbName)
-	fmt.Println(dsn)
-
+	
 	// Connect to DB using DSN
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
