@@ -85,6 +85,26 @@ func SetupRouter() *gin.Engine {
 			userRoutes.PUT("activate", controllers.BaseHandler)
 		}
 
+		cartRoutes := v1Routes.Group("/cart")
+		{
+			// View cart
+			cartRoutes.GET("/", controllers.BaseHandler)
+
+			// Get cart item count
+			cartRoutes.GET("/count", controllers.BaseHandler)
+
+			// Add, update and delete cart items
+			cartRoutes.POST("/add", controllers.BaseHandler)
+			cartRoutes.PUT("/update", controllers.BaseHandler)
+			cartRoutes.DELETE("/remove", controllers.BaseHandler)
+
+			// Empty cart
+			cartRoutes.POST("/cart/empty", controllers.BaseHandler)
+
+			// Checkout
+			cartRoutes.POST("cart/checkout", controllers.BaseHandler)
+		}
+
 	}
 
 	return router
