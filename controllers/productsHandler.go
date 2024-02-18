@@ -65,9 +65,17 @@ func ProductsHandler(c *gin.Context) {
 		// Query DB for product id
 		result := initializers.DB.First(&productItem, id)
 
-		// Check for errors
+		// Error handling --
+
+		// Check for not found
+		if result.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": result.Error.Error()})
+			return
+		}
+		// Check for any error
 		if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+			return
 		}
 
 		// Return product item
