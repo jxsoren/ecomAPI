@@ -5,6 +5,7 @@ import (
 	"ecommerce_api/models"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,20 @@ func GetProducts(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, productItem)
 }
 
+type ProductInput struct {
+	Name          string  `json:"name"`
+	Description   string  `json:"description"`
+	Price         float64 `json:"price"`
+	CategoryID    int     `json:"category_id"`
+	StockQuantity int     `json:"stock_quantity"`
+	SKU           string  `json:"sku"`
+	ImageURL      string  `json:"image_url"`
+	Weight        float32 `json:"weight"`
+	Dimensions    string  `json:"dimensions"`
+	Color         string  `json:"color"`
+	Size          string  `json:"size"`
+}
+
 func ProductsHandler(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
@@ -32,7 +47,7 @@ func ProductsHandler(c *gin.Context) {
 		id := c.Param("id")
 
 		// Query DB for product id
-		result := initializers.DB.First(&models.Product{}, id)
+		result := initializers.DB.First(&productItem, id)
 
 		// Check for errors
 		if result.Error != nil {
@@ -43,25 +58,45 @@ func ProductsHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, productItem)
 
 	case "POST":
+		// Create instance of product input
+		var productInput ProductInput
 
-		var productItem models.Product
-
-		// Bind request body & check for errors
-		if err := c.BindJSON(&productItem); err != nil {
+		// Bind req body to productInput & handle errors
+		if err := c.BindJSON(&productInput); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		// Insert new item into DB
+		// Map productItem values to instance of Product model
+		productItem := models.Product{
+			Name:          productInput.Name,
+			Description:   productInput.Description,
+			Price:         productInput.Price,
+			CategoryID:    productInput.CategoryID,
+			StockQuantity: productInput.StockQuantity,
+			SKU:           productInput.SKU,
+			ImageURL:      productInput.ImageURL,
+			AddedDate:     time.Now(),
+			UpdatedDate:   time.Now(),
+			IsActive:      true,
+			Weight:        productInput.Weight,
+			Dimensions:    productInput.Dimensions,
+			Color:         productInput.Color,
+			Size:          productInput.Size,
+			Rating:        000.00,
+		}
+
+		// Insert productItem into DB
 		result := initializers.DB.Create(&productItem)
 		fmt.Println(productItem)
 
-		// Throw 500 error if creation fails
+		// Handle error
 		if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 			return
 		}
 
+		// Return productItem back to client
 		c.JSON(http.StatusOK, productItem)
 
 	case "PUT":
