@@ -203,7 +203,11 @@ func ProductsHandler(c *gin.Context) {
 		id := c.Param("id")
 
 		// Check for product & handle not found
-		if result := initializers.DB.First(&product, id); result.Error != nil {
+		notFoundMessage := fmt.Sprintf("Could not delete. No products found with ID of %s", id)
+		if result := initializers.DB.First(&product, id); result.Error.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": notFoundMessage})
+			return
+		} else if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 			return
 		}
