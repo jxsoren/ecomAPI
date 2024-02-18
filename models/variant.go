@@ -6,7 +6,7 @@ import (
 
 type Variant struct {
 	gorm.Model
-	ProductID             string  `gorm:"type:varchar(50)" json:"product_id"`
+	ProductID             int     `gorm:"type:int" json:"product_id"`
 	Size                  string  `gorm:"type:varchar(50)" json:"size"`
 	Color                 string  `gorm:"type:varchar(50)" json:"color"`
 	Material              string  `gorm:"type:varchar(50)" json:"material"`
