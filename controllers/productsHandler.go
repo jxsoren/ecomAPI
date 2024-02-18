@@ -188,7 +188,23 @@ func ProductsHandler(c *gin.Context) {
 		// Respond with updated product
 		c.JSON(http.StatusOK, product)
 	case "DELETE":
-		// id := c.Param("id")
+		// Create inst of product
+		var product models.Product
+
+		// Get ID from path param
+		id := c.Param("id")
+
+		// Check for product & handle not found
+		if result := initializers.DB.First(&product, id); result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+			return
+		}
+
+		// Delete product from DB
+		initializers.DB.Delete(&product)
+
+		// Respond with 200
+		c.JSON(http.StatusOK, gin.H{"status": "Product successfully deleted!"})
 
 	default:
 		c.String(http.StatusMethodNotAllowed, "Method not allowed")
