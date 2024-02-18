@@ -17,7 +17,7 @@ func init() {
 func main() {
 
 	// Creates Table (if it doesn't exist)
-	err := initializers.DB.AutoMigrate(&models.ProductItem{})
+	err := initializers.DB.AutoMigrate(&models.Product{})
 
 	if err != nil {
 		log.Fatalf("Error during migration: %v", err)

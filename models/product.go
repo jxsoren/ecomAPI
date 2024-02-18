@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ProductItem struct {
+type Product struct {
 	gorm.Model
 	Name          string    `gorm:"type:varchar(255)" json:"name"`
 	Description   string    `gorm:"type:text" json:"description"`
