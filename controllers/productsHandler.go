@@ -10,7 +10,7 @@ import (
 )
 
 func GetProducts(c *gin.Context) {
-	var productItem models.ProductItem
+	var productItem models.Product
 
 	// Find all records from product_items table
 	results := initializers.DB.Find(&productItem)
@@ -25,12 +25,26 @@ func GetProducts(c *gin.Context) {
 func ProductsHandler(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
+		// Create ref to Product model
+		var productItem models.Product
+
+		// Get product id from path param
 		id := c.Param("id")
-		c.String(http.StatusOK, "Retrieving item with ID %s \n", id)
+
+		// Query DB for product id
+		result := initializers.DB.First(&models.Product{}, id)
+
+		// Check for errors
+		if result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		}
+
+		// Return product item
+		c.JSON(http.StatusOK, productItem)
 
 	case "POST":
 
-		var productItem models.ProductItem
+		var productItem models.Product
 
 		// Bind request body & check for errors
 		if err := c.BindJSON(&productItem); err != nil {
@@ -51,7 +65,7 @@ func ProductsHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, productItem)
 
 	case "PUT":
-		var productItem models.ProductItem
+		var productItem models.Product
 
 		id := c.Param("id")
 
