@@ -9,12 +9,12 @@ import (
 func SetupRouter() *gin.Engine {
 	router := gin.Default()
 
-	apiRoutes := router.Group("/api")
+	// Root Route
+	router.GET("/", controllers.BaseHandler)
 
+	apiRoutes := router.Group("/api")
 	v1Routes := apiRoutes.Group("/v1")
 	{
-		// Root Route
-		router.GET("/", controllers.BaseHandler)
 
 		// Product Routes
 		productRoutes := v1Routes.Group("/products")
