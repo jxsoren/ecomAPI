@@ -37,6 +37,22 @@ type ProductInput struct {
 	Size          string  `json:"size"`
 }
 
+// All types are set as pointers to handle optional fields
+type ProductUpdateInput struct {
+	Name          *string  `json:"name"`
+	Description   *string  `json:"description"`
+	Price         *float64 `json:"price"`
+	CategoryID    *int     `json:"category_id"`
+	StockQuantity *int     `json:"stock_quantity"`
+	SKU           *string  `json:"sku"`
+	ImageURL      *string  `json:"image_url"`
+	Weight        *float32 `json:"weight"`
+	Dimensions    *string  `json:"dimensions"`
+	Color         *string  `json:"color"`
+	Size          *string  `json:"size"`
+	Rating        *float32 `json:"rating"`
+}
+
 func ProductsHandler(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
@@ -100,19 +116,77 @@ func ProductsHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, productItem)
 
 	case "PUT":
-		var productItem models.Product
+		// Create inst of ProductInput struct (all values are pointers to types)
+		var input ProductUpdateInput
 
+		// Get product ID from path param
 		id := c.Param("id")
 
-		// Handle error
-		if err := c.BindJSON(&productItem); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		// Handle input binding errors
+		if err := c.BindJSON(&input); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		// result := initializers.DB.Update()
+		// Find product using ID
+		var product models.Product
 
-		c.String(http.StatusOK, "Updating item with ID %s", id)
+		// Handle errors if product is unfound
+		notFoundMessage := fmt.Sprintf("Product not found with ID of %s", id)
+		if err := initializers.DB.First(&product, id).Error; err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": notFoundMessage})
+			return
+		}
+
+		// Validate inputs
+		if input.Name != nil {
+			product.Name = *input.Name
+		}
+		if input.Description != nil {
+			product.Description = *input.Description
+		}
+		if input.Price != nil {
+			product.Price = *input.Price
+		}
+		if input.CategoryID != nil {
+			product.CategoryID = *input.CategoryID
+		}
+		if input.StockQuantity != nil {
+			product.StockQuantity = *input.StockQuantity
+		}
+		if input.SKU != nil {
+			product.SKU = *input.SKU
+		}
+		if input.ImageURL != nil {
+			product.ImageURL = *input.ImageURL
+		}
+		if input.Weight != nil {
+			product.Weight = *input.Weight
+		}
+		if input.Dimensions != nil {
+			product.Dimensions = *input.Dimensions
+		}
+		if input.Color != nil {
+			product.Color = *input.Color
+		}
+		if input.Size != nil {
+			product.Size = *input.Size
+		}
+		if input.Rating != nil {
+			product.Rating = *input.Rating
+		}
+
+		// Update product
+		result := initializers.DB.Save(&product)
+
+		// Handle handle update errors
+		if result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+			return
+		}
+
+		// Respond with updated product
+		c.JSON(http.StatusOK, product)
 	case "DELETE":
 		// id := c.Param("id")
 
