@@ -1,2 +1,70 @@
+# Compiled binary and object files
+/bin/
+/obj/
+*.o
+*.a
+*.so
+*.exe
+*.test
+*.out
+
+# Dependency directories (remove the comment below if using Go modules)
+# /vendor/
+
+# Project-specific environment variables
 .env*
 .*env
+
+# IDE and Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+*.[Oo]r[Ee]s
+*.log
+*.log.[0-9]*
+*.tlog
+*.tmproj
+*.tmproject
+*.vspscc
+*.vssscc
+*.userosscache
+*.usertasks
+*.csproj.user
+*.vbproj.user
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Go specific
+*.tar.gz
+/go.sum
+/go.mod
+Gopkg.lock
+Gopkg.toml
+
+# Exclude build directories
+/dist/
+
+# Generated files by JetBrains IDEs
+/.idea/
+
+# Others
+*.DS_Store
+npm-debug.log
