@@ -32,7 +32,7 @@ func SetupRouter() *gin.Engine {
 			// Product variants
 			productRoutes.GET("/:id/variants")
 			productRoutes.POST("/:id/variants")       // (Admin Only)
-			productRoutes.POST("/:id/variants/:id")   // (Admin Only)
+			productRoutes.GET("/:id/variants/:id")   // (Admin Only)
 			productRoutes.DELETE("/:id/variants/:id") // (Admin Only)
 
 			// Product inventory
