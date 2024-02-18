@@ -2,6 +2,7 @@ package routes
 
 import (
 	"ecommerce_api/controllers"
+	"ecommerce_api/controllers/products"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,13 +21,13 @@ func SetupRouter() *gin.Engine {
 		productRoutes := v1Routes.Group("/products")
 		{
 			// Base route (get all products)
-			productRoutes.GET("/", controllers.GetProducts)
+			productRoutes.GET("/", products.GetProducts)
 
 			// Create, Read, Update, Delete products
-			productRoutes.GET("/:id", controllers.ProductsHandler)
-			productRoutes.POST("/", controllers.ProductsHandler)      // (Admin Only)
-			productRoutes.PUT("/:id", controllers.ProductsHandler)    // (Admin Only)
-			productRoutes.DELETE("/:id", controllers.ProductsHandler) // (Admin Only)
+			productRoutes.GET("/:id", products.ProductsHandler)
+			productRoutes.POST("/", products.ProductsHandler)      // (Admin Only)
+			productRoutes.PUT("/:id", products.ProductsHandler)    // (Admin Only)
+			productRoutes.DELETE("/:id", products.ProductsHandler) // (Admin Only)
 
 			// Product variants
 			productRoutes.GET("/:id/variants")
