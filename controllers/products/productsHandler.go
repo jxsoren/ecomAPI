@@ -3,20 +3,22 @@ package controllers
 import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetProducts(c *gin.Context) {
 	var productItem models.Product
 
 	// Find all records from product_items table
-	results := initializers.DB.Find(&productItem)
-	if results.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": results.Error.Error()})
+	result := initializers.DB.Find(&productItem)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 	}
 
 	// Return items in pretty printed JSON -- may need to return compact JSON in prod
@@ -65,15 +67,11 @@ func ProductsHandler(c *gin.Context) {
 		// Query DB for product id
 		result := initializers.DB.First(&productItem, id)
 
-		// Error handling --
-
-		// Check for not found
-		if result.Error.Error() == "record not found" {
-			c.JSON(http.StatusNotFound, gin.H{"error": result.Error.Error()})
+		// Check for not record not found + handle catch all error
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "No record found"})
 			return
-		}
-		// Check for any error
-		if result.Error != nil {
+		} else if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 			return
 		}
