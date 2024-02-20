@@ -6,7 +6,7 @@ import (
 
 type Variant struct {
 	gorm.Model
-	ProductID             int     `gorm:"type:int" json:"product_id"`
+	ProductID             uint    `gorm:"foreignKey:ProductID" json:"product_id"`
 	Size                  string  `gorm:"type:varchar(50)" json:"size"`
 	Color                 string  `gorm:"type:varchar(50)" json:"color"`
 	Material              string  `gorm:"type:varchar(50)" json:"material"`
@@ -18,6 +18,7 @@ type Variant struct {
 	ImageURL              string  `gorm:"type:varchar(255)" json:"image_url"`
 	AdditionalDescription string  `gorm:"type:text" json:"additiona_description"`
 	SalePrice             float32 `gorm:"type:decimal(10,2)" json:"sale_price"`
-	AvailabilityStatus    string  `gorm:"type:varchar" json:"availability_status"`
+	AvailabilityStatus    string  `gorm:"type:varchar(10)" json:"availability_status"`
 	ShippingDetails       string  `gorm:"type:text" json:"shipping_details"`
+	CategoryID            int     `gorm:"index" json:"category_id"`
 }
