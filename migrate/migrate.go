@@ -7,19 +7,17 @@ import (
 )
 
 func init() {
-	// Load Env variables
 	initializers.LoadEnvVars()
-	// Connect to DB
 	initializers.ConnectToDB()
-
 }
 
 func main() {
 
-	// Creates Table (if it doesn't exist)
-	err := initializers.DB.AutoMigrate(&models.Product{})
+	// if productsErr := initializers.DB.AutoMigrate(&models.Product{}); productsErr != nil {
+	// 	log.Fatalf("Error during migration: %v", productsErr)
+	// }
 
-	if err != nil {
-		log.Fatalf("Error during migration: %v", err)
+	if variantsErr := initializers.DB.AutoMigrate(&models.Variant{}); variantsErr != nil {
+		log.Fatalf("Error during Variant Table migration. Error: %v", variantsErr)
 	}
 }
