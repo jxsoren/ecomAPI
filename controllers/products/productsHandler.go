@@ -26,33 +26,31 @@ func GetProducts(c *gin.Context) {
 }
 
 type ProductInput struct {
-	Name          string  `json:"name"`
-	Description   string  `json:"description"`
-	Price         float64 `json:"price"`
-	CategoryID    int     `json:"category_id"`
-	StockQuantity int     `json:"stock_quantity"`
-	SKU           string  `json:"sku"`
-	ImageURL      string  `json:"image_url"`
-	Weight        float32 `json:"weight"`
-	Dimensions    string  `json:"dimensions"`
-	Color         string  `json:"color"`
-	Size          string  `json:"size"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	CategoryID  int     `json:"category_id"`
+	SKU         string  `json:"sku"`
+	ImageURL    string  `json:"image_url"`
+	Weight      float32 `json:"weight"`
+	Dimensions  string  `json:"dimensions"`
+	Color       string  `json:"color"`
+	Size        string  `json:"size"`
 }
 
 // All types are set as pointers to handle optional fields
 type ProductUpdateInput struct {
-	Name          *string  `json:"name"`
-	Description   *string  `json:"description"`
-	Price         *float64 `json:"price"`
-	CategoryID    *int     `json:"category_id"`
-	StockQuantity *int     `json:"stock_quantity"`
-	SKU           *string  `json:"sku"`
-	ImageURL      *string  `json:"image_url"`
-	Weight        *float32 `json:"weight"`
-	Dimensions    *string  `json:"dimensions"`
-	Color         *string  `json:"color"`
-	Size          *string  `json:"size"`
-	Rating        *float32 `json:"rating"`
+	Name        *string  `json:"name"`
+	Description *string  `json:"description"`
+	Price       *float64 `json:"price"`
+	CategoryID  *int     `json:"category_id"`
+	SKU         *string  `json:"sku"`
+	ImageURL    *string  `json:"image_url"`
+	Weight      *float32 `json:"weight"`
+	Dimensions  *string  `json:"dimensions"`
+	Color       *string  `json:"color"`
+	Size        *string  `json:"size"`
+	Rating      *float32 `json:"rating"`
 }
 
 func ProductsHandler(c *gin.Context) {
@@ -91,21 +89,20 @@ func ProductsHandler(c *gin.Context) {
 
 		// Map productItem values to instance of Product model
 		productItem := models.Product{
-			Name:          productInput.Name,
-			Description:   productInput.Description,
-			Price:         productInput.Price,
-			CategoryID:    productInput.CategoryID,
-			StockQuantity: productInput.StockQuantity,
-			SKU:           productInput.SKU,
-			ImageURL:      productInput.ImageURL,
-			AddedDate:     time.Now(),
-			UpdatedDate:   time.Now(),
-			IsActive:      true,
-			Weight:        productInput.Weight,
-			Dimensions:    productInput.Dimensions,
-			Color:         productInput.Color,
-			Size:          productInput.Size,
-			Rating:        000.00,
+			Name:        productInput.Name,
+			Description: productInput.Description,
+			Price:       productInput.Price,
+			CategoryID:  productInput.CategoryID,
+			SKU:         productInput.SKU,
+			ImageURL:    productInput.ImageURL,
+			AddedDate:   time.Now(),
+			UpdatedDate: time.Now(),
+			IsActive:    true,
+			Weight:      productInput.Weight,
+			Dimensions:  productInput.Dimensions,
+			Color:       productInput.Color,
+			Size:        productInput.Size,
+			Rating:      000.00,
 		}
 
 		// Insert productItem into DB
@@ -156,9 +153,6 @@ func ProductsHandler(c *gin.Context) {
 		}
 		if input.CategoryID != nil {
 			product.CategoryID = *input.CategoryID
-		}
-		if input.StockQuantity != nil {
-			product.StockQuantity = *input.StockQuantity
 		}
 		if input.SKU != nil {
 			product.SKU = *input.SKU
