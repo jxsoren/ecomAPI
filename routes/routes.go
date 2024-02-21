@@ -25,33 +25,33 @@ func SetupRouter() *gin.Engine {
 
 			// Create, Read, Update, Delete products
 			productRoutes.GET("/:id", products.ProductsHandler)
-			productRoutes.POST("/", products.ProductsHandler)      // (Admin Only)
-			productRoutes.PUT("/:id", products.ProductsHandler)    // (Admin Only)
-			productRoutes.DELETE("/:id", products.ProductsHandler) // (Admin Only)
+			productRoutes.POST("/", products.ProductsHandler)      // ! (Admin Only)
+			productRoutes.PUT("/:id", products.ProductsHandler)    // ! (Admin Only)
+			productRoutes.DELETE("/:id", products.ProductsHandler) // ! (Admin Only)
 
 			// Product variants
 			productRoutes.GET("/:id/variants", products.VariantsHandler)
-			productRoutes.POST("/:id/variants", products.VariantsHandler)               // (Admin Only)
-			productRoutes.PUT("/:id/variants/:variant_id", products.VariantsHandler)    // (Admin Only)
-			productRoutes.DELETE("/:id/variants/:variant_id", products.VariantsHandler) // (Admin Only)
+			productRoutes.POST("/:id/variants", products.VariantsHandler)               // ! (Admin Only)
+			productRoutes.PUT("/:id/variants/:variant_id", products.VariantsHandler)    // ! (Admin Only)
+			productRoutes.DELETE("/:id/variants/:variant_id", products.VariantsHandler) // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Product inventory
 			productRoutes.GET("/:id/stock")
-			productRoutes.PUT("/:id/stock") // (Admin Only)
+			productRoutes.PUT("/:id/stock") // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Product offers/deals
 			productRoutes.GET("/offers")
-			productRoutes.PUT("/:id/offer") // (Admin Only)
+			productRoutes.PUT("/:id/offer") // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Rating and Reviews
 			productRoutes.GET("/reviews")
 			productRoutes.GET("/:id/reviews")
 			productRoutes.POST("/:id/reviews")
-			productRoutes.PUT("/:id/reviews")    // (Admin Only)
-			productRoutes.DELETE("/:id/reviews") // (Admin Only)
+			productRoutes.PUT("/:id/reviews")    // ! (Admin Only)
+			productRoutes.DELETE("/:id/reviews") // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Search/Query products
@@ -64,7 +64,7 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: create handlers for routes
 			// Product Analyitics
-			productRoutes.GET("/:id/analyitics") // (Admin Only)
+			productRoutes.GET("/:id/analyitics") // ! (Admin Only)
 		}
 
 		userRoutes := v1Routes.Group("/users")
@@ -91,10 +91,10 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: create handlers for routes
 			// User administration
-			userRoutes.GET("/users")     // (Admin Only)
-			userRoutes.GET("/users/:id") // (Admin Only)
-			userRoutes.PUT("deactivate") // (Admin Only)
-			userRoutes.PUT("activate")   // (Admin Only)
+			userRoutes.GET("/users")     // ! (Admin Only)
+			userRoutes.GET("/users/:id") // ! (Admin Only)
+			userRoutes.PUT("deactivate") // ! (Admin Only)
+			userRoutes.PUT("activate")   // ! (Admin Only)
 		}
 
 		cartRoutes := v1Routes.Group("/cart")
@@ -130,7 +130,7 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: create handlers for routes
 			// Get all orders
-			orderRoutes.GET("/") // (Admin Only)
+			orderRoutes.GET("/") // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// List all orders for user
