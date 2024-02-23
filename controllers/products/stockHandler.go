@@ -66,3 +66,79 @@ func UpdateStock(c *gin.Context) {
 	// Respond successfully
 	c.JSON(http.StatusOK, gin.H{"status": "successful", "stock_quantity": product.StockQuantity})
 }
+
+func GetVariantStock(c *gin.Context) {
+	// Get variant_id from path param
+	variant_id := c.Param("variant_id")
+
+	// Get product ID from path param
+	product_id := c.Param("id")
+
+	// Create instance of variant model
+	var variant models.Variant
+
+	// Create instance of product model
+	var product models.Product
+
+	// Verify that product exists in DB
+	if err := initializers.DB.First(&product, product_id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+		return
+	}
+
+	// Search for variant in DB
+	if err := initializers.DB.First(&variant, variant_id); err.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+		return
+	}
+
+	// Respond with variant stock
+	c.JSON(http.StatusOK, gin.H{"stock_quantity": variant.StockQuantity})
+}
+
+func UpdateVariantStock(c *gin.Context) {
+	// Get variant_id from path path param
+	variant_id := c.Param("variant_id")
+
+	// Get product ID from path param
+	product_id := c.Param("id")
+
+	// Create instance of variant model
+	var variant models.Variant
+
+	// Create instance of product model
+	var product models.Product
+
+	// Capture req body
+	var input StockUpdateInput
+	if err := c.BindJSON(&input); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+		return
+	}
+
+	// Verify that product exists in DB
+	if err := initializers.DB.First(&product, product_id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+		return
+	}
+
+	// Verify that variant exists in DB
+	if err := initializers.DB.First(&variant, variant_id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+		return
+	}
+
+	// Assign new input value to instance of model
+	if input.StockQuantity != nil {
+		variant.StockQuantity = *input.StockQuantity
+	}
+
+	// Update DB with new stock value
+	if result := initializers.DB.Save(&input); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	// Respond successfully with new stock value
+	c.JSON(http.StatusOK, gin.H{"status": "successful", "stock_quantity": variant.StockQuantity})
+}
