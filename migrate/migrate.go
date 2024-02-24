@@ -20,4 +20,8 @@ func main() {
 	if variantsErr := initializers.DB.AutoMigrate(&models.Variant{}); variantsErr != nil {
 		log.Fatalf("Error during Variant Table migration. Error: %v", variantsErr)
 	}
+
+	if reviewsErr := initializers.DB.AutoMigrate(&models.Review{}); reviewsErr != nil {
+		log.Fatalf("Error during Reviews Table Migration. Error: %v", reviewsErr)
+	}
 }
