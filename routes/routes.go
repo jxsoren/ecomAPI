@@ -30,7 +30,7 @@ func SetupRouter() *gin.Engine {
 			productRoutes.DELETE("/:id", products.ProductsHandler) // ! (Admin Only)
 
 			// Product variants
-			productRoutes.GET("/:id/variants", products.VariantsHandler)
+			productRoutes.GET("/:id/variants/:variant_id", products.VariantsHandler)
 			productRoutes.POST("/:id/variants", products.VariantsHandler)               // ! (Admin Only)
 			productRoutes.PUT("/:id/variants/:variant_id", products.VariantsHandler)    // ! (Admin Only)
 			productRoutes.DELETE("/:id/variants/:variant_id", products.VariantsHandler) // ! (Admin Only)
@@ -51,7 +51,7 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: create handlers for routes
 			// Rating and Reviews
-			productRoutes.GET("/reviews")
+			productRoutes.GET("/reviews", products.GetReviews)
 			productRoutes.GET("/:id/reviews")
 			productRoutes.POST("/:id/reviews")
 			productRoutes.PUT("/:id/reviews")    // ! (Admin Only)
