@@ -31,7 +31,37 @@ func VariantsHandler(c *gin.Context) {
 
 	switch c.Request.Method {
 
-	// Create variant
+	case "GET":
+		// Get IDs from path params
+		product_id := c.Param("id")
+		variant_id := c.Param("variant_id")
+
+		// Create instances of product and vairant models
+		var product models.Product
+		var variant models.Variant
+		
+
+		// Query DB for product id
+		result := initializers.DB.First(&product, product_id)
+
+		// Check for not record not found + handle catch all error
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "No record found"})
+			return
+		} else if result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
+			return
+		}
+
+		// Get variant from DB
+		if result := initializers.DB.First(&variant, variant_id); result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error, "error_message": "Variant not found"})
+			return
+		}
+
+		// Return variant
+		c.JSON(http.StatusOK, variant)
+
 	case "POST":
 		// Create instance of variant input
 		var input VariantInput
