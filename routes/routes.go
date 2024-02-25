@@ -35,14 +35,14 @@ func SetupRouter() *gin.Engine {
 			productRoutes.PUT("/:id/variants/:variant_id", products.VariantsHandler)    // ! (Admin Only)
 			productRoutes.DELETE("/:id/variants/:variant_id", products.VariantsHandler) // ! (Admin Only)
 
+			// TODO: create handlers for routes
+			// Variant inventory
+			productRoutes.GET("/:id/variants/:variant_id/stock", products.GetVariantStock)
+			productRoutes.PUT("/:id/variants/:variant_id/stock", products.UpdateVariantStock) // ! (Admin Only)
+
 			// Product inventory
 			productRoutes.GET("/:id/stock", products.GetStock)
 			productRoutes.PUT("/:id/stock", products.UpdateStock) // ! (Admin Only)
-
-			// TODO: create handlers for routes
-			// Variant inventory
-			productRoutes.GET("/:id/stock/:variant_id", products.GetVariantStock)
-			productRoutes.PUT("/:id/stock/:variant_id", products.UpdateVariantStock) // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Product offers/deals
