@@ -22,7 +22,7 @@ type ReviewInput struct {
 	HelpfulCount int     `json:"helpful_count"`
 }
 
-func GetReviews(c *gin.Context) {
+func GetAllReviews(c *gin.Context) {
 	// Create var to store results
 	var reviews []models.Review
 
