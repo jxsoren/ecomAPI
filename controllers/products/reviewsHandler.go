@@ -4,7 +4,6 @@ import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -59,9 +58,12 @@ func CreateReview(c *gin.Context) {
 
 	// Verify product from path param exists
 	var product models.Product
-	productNotFoundMessage := fmt.Sprintf("Product with product ID of %s", product_id)
-	if err := initializers.DB.First(&product, product_id); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+	result := initializers.DB.First(&product, product_id)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No record found"})
+		return
+	} else if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
 
