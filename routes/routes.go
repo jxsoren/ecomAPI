@@ -49,7 +49,7 @@ func SetupRouter() *gin.Engine {
 			productRoutes.GET("/offers")
 			productRoutes.PUT("/:id/offer") // ! (Admin Only)
 
-			// TODO: create handlers for routes
+			// TODO: refactor & review
 			// Rating and Reviews
 			productRoutes.GET("/reviews", products.GetAllReviews)
 			productRoutes.GET("/:id/reviews", products.GetAllReivewsForProduct)
