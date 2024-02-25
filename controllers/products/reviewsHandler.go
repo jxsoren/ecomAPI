@@ -227,3 +227,42 @@ func UpdateReview(c *gin.Context) {
 	// Respond sucessfully
 	c.JSON(http.StatusOK, review)
 }
+
+func DeleteReveiew(c *gin.Context) {
+	// Capture IDs from path params
+	product_id := c.Param("id")
+	review_id := c.Param("review_id")
+
+	// Verify product exists
+	var product models.Product
+	productResult := initializers.DB.First(&product, product_id)
+	productNotFoundMessage := fmt.Sprintf("No product with ID of %s found.", product_id)
+	if errors.Is(productResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+		return
+	} else if productResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": productResult.Error.Error(), "debug_message": "Error found in productResult.Error"})
+		return
+	}
+
+	// Verify review exists
+	var review models.Review
+	reviewResult := initializers.DB.First(&review, review_id)
+	reviewNotFoundMessage := fmt.Sprintf("No review with ID of %s found.", review_id)
+	if errors.Is(reviewResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": reviewNotFoundMessage, "debug_message": "Review not found"})
+		return
+	} else if reviewResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": reviewResult.Error.Error(), "debug_message": "Error with finding review"})
+		return
+	}
+
+	// Delete review from DB
+	if result := initializers.DB.Delete(&review); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error})
+		return
+	}
+
+	// Respond
+	c.JSON(http.StatusOK, gin.H{"status": "Review sucessfully deleted."})
+}
