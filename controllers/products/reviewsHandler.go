@@ -22,6 +22,14 @@ type ReviewInput struct {
 	HelpfulCount int     `json:"helpful_count"`
 }
 
+type ReviewUpdateInput struct {
+	Rating       *float32 `json:"rating"`
+	Title        *string  `json:"title"`
+	Content      *string  `json:"content"`
+	IsVerified   *bool    `json:"is_verified"`
+	HelpfulCount *int     `json:"helpful_count"`
+}
+
 func GetAllReviews(c *gin.Context) {
 	// Create var to store results
 	var reviews []models.Review
@@ -154,5 +162,68 @@ func CreateReview(c *gin.Context) {
 	}
 
 	// Respond successfully with created review
+	c.JSON(http.StatusOK, review)
+}
+
+func UpdateReview(c *gin.Context) {
+	// Capture IDs from path params
+	product_id := c.Param("id")
+	review_id := c.Param("review_id")
+
+	// Verify product exists
+	var product models.Product
+	productResult := initializers.DB.First(&product, product_id)
+	productNotFoundMessage := fmt.Sprintf("No product with ID of %s found.", product_id)
+	if errors.Is(productResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+		return
+	} else if productResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": productResult.Error.Error(), "debug_message": "Error found in productResult.Error"})
+		return
+	}
+
+	// Verify review exists
+	var review models.Review
+	reviewResult := initializers.DB.First(&review, review_id)
+	reviewNotFoundMessage := fmt.Sprintf("No review with ID of %s found.", review_id)
+	if errors.Is(reviewResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": reviewNotFoundMessage, "debug_message": "Review not found"})
+		return
+	} else if reviewResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": reviewResult.Error.Error(), "debug_message": "Error with finding review"})
+		return
+	}
+
+	// Capture req body
+	var reviewUpdateInput ReviewUpdateInput
+	if err := c.BindJSON(&reviewUpdateInput); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(), "debug_message": "Error binding JSON"})
+		return
+	}
+
+	// Handle partial updates
+	if reviewUpdateInput.Rating != nil {
+		review.Rating = *reviewUpdateInput.Rating
+	}
+	if reviewUpdateInput.Rating != nil {
+		review.Title = *reviewUpdateInput.Title
+	}
+	if reviewUpdateInput.Rating != nil {
+		review.Content = *reviewUpdateInput.Content
+	}
+	if reviewUpdateInput.Rating != nil {
+		review.IsVerified = *reviewUpdateInput.IsVerified
+	}
+	if reviewUpdateInput.Rating != nil {
+		review.HelpfulCount = *reviewUpdateInput.HelpfulCount
+	}
+
+	// Make update in DB
+	if result := initializers.DB.Save(&review); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error, "debug_message": "Error occurred when making update to DB"})
+		return
+	}
+
+	// Respond sucessfully
 	c.JSON(http.StatusOK, review)
 }
