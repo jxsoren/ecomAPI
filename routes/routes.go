@@ -53,7 +53,8 @@ func SetupRouter() *gin.Engine {
 			// Rating and Reviews
 			productRoutes.GET("/reviews", products.GetReviews)
 			productRoutes.GET("/:id/reviews")
-			productRoutes.POST("/:id/reviews")
+			productRoutes.GET("/:id/reviews/:review_id")
+			productRoutes.POST("/:id/reviews", products.CreateReview)
 			productRoutes.PUT("/:id/reviews")    // ! (Admin Only)
 			productRoutes.DELETE("/:id/reviews") // ! (Admin Only)
 
