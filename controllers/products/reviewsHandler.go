@@ -42,6 +42,34 @@ func GetAllReviews(c *gin.Context) {
 	c.JSON(http.StatusOK, reviews)
 }
 
+func GetAllReivewsForProduct(c *gin.Context) {
+	// Capture product ID from path param
+	product_id := c.Param("id")
+
+	// Verify product exists
+	var product models.Product
+	productResult := initializers.DB.First(&product, product_id)
+	productNotFoundMessage := fmt.Sprintf("No product with ID of %s found.", product_id)
+	if errors.Is(productResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+		return
+	} else if productResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": productResult.Error.Error()})
+		return
+	}
+
+	// Create var to store all reviews
+	var reviews []models.Review
+
+	// Fetch all reviews from DB & bind to var
+	if reviewsResult := initializers.DB.Find(&reviews); reviewsResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": reviewsResult.Error.Error()})
+	}
+
+	// Respond sucessfully with all reviews
+	c.JSON(http.StatusOK, reviews)
+}
+
 func GetReview(c *gin.Context) {
 	// Capture IDs from path params
 	product_id := c.Param("id")

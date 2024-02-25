@@ -52,7 +52,7 @@ func SetupRouter() *gin.Engine {
 			// TODO: create handlers for routes
 			// Rating and Reviews
 			productRoutes.GET("/reviews", products.GetAllReviews)
-			productRoutes.GET("/:id/reviews")
+			productRoutes.GET("/:id/reviews", products.GetAllReivewsForProduct)
 			productRoutes.GET("/:id/reviews/:review_id", products.GetReview)
 			productRoutes.POST("/:id/reviews", products.CreateReview)
 			productRoutes.PUT("/:id/reviews/:review_id")    // ! (Admin Only)
