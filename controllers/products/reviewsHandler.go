@@ -4,6 +4,7 @@ import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -39,6 +40,39 @@ func GetReviews(c *gin.Context) {
 
 	// Respond with reviews
 	c.JSON(http.StatusOK, reviews)
+}
+
+func GetReview(c *gin.Context) {
+	// Capture IDs from path params
+	product_id := c.Param("id")
+	review_id := c.Param("review_id")
+
+	// Verify product exists
+	var product models.Product
+	productResult := initializers.DB.First(&product, product_id)
+	productNotFoundMessage := fmt.Sprintf("No product with ID of %s found.", product_id)
+	if errors.Is(productResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+		return
+	} else if productResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": productResult.Error.Error()})
+		return
+	}
+
+	// Retrieve review from DB
+	var review models.Review
+	reviewResult := initializers.DB.First(&review, review_id)
+	reviewNotFoundMessage := fmt.Sprintf("No review with ID of %s found.", review_id)
+	if errors.Is(reviewResult.Error, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusNotFound, gin.H{"error": reviewNotFoundMessage})
+		return
+	} else if reviewResult.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": reviewResult.Error.Error()})
+		return
+	}
+
+	// Respond sucessfully with review
+	c.JSON(http.StatusOK, review)
 }
 
 func CreateReview(c *gin.Context) {
