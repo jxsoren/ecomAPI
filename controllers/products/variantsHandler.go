@@ -4,6 +4,7 @@ import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +28,22 @@ type VariantInput struct {
 	ShippingDetails       string  `json:"shipping_details"`
 }
 
+type VariantUpdateInput struct {
+	Size                  *string  `json:"size"`
+	Color                 *string  `json:"color"`
+	Material              *string  `json:"material"`
+	Weight                *float32 `json:"weight"`
+	Dimensions            *string  `json:"dimensions"`
+	SKU                   *string  `json:"sku"`
+	Price                 *float64 `json:"price"`
+	StockQuantity         *int     `json:"stock_quantity"`
+	ImageURL              *string  `json:"image_url"`
+	AdditionalDescription *string  `json:"additiona_description"`
+	SalePrice             *float32 `json:"sale_price"`
+	AvailabilityStatus    *string  `json:"availability_status"`
+	ShippingDetails       *string  `json:"shipping_details"`
+}
+
 func VariantsHandler(c *gin.Context) {
 
 	switch c.Request.Method {
@@ -39,7 +56,6 @@ func VariantsHandler(c *gin.Context) {
 		// Create instances of product and vairant models
 		var product models.Product
 		var variant models.Variant
-		
 
 		// Query DB for product id
 		result := initializers.DB.First(&product, product_id)
@@ -98,6 +114,72 @@ func VariantsHandler(c *gin.Context) {
 		// Respond with successful message
 		c.JSON(http.StatusOK, variant)
 
+	case "PUT":
+		// Get IDs from path params
+		product_id := c.Param("id")
+		variant_id := c.Param("variant_id")
+
+		// Verify product exists
+		var product models.Product
+		productResult := initializers.DB.First(&product, product_id)
+		productNotFoundMessage := fmt.Sprintf("No product with ID of %s found.", product_id)
+		if errors.Is(productResult.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+			return
+		} else if productResult.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": productResult.Error.Error()})
+			return
+		}
+
+		// Verify variant exists
+		var variant models.Variant
+		variantResult := initializers.DB.First(&variant, variant_id)
+		reviewNotFoundMessage := fmt.Sprintf("No review with ID of %s found.", variant_id)
+		if errors.Is(variantResult.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": reviewNotFoundMessage})
+			return
+		} else if variantResult.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": variantResult.Error.Error()})
+			return
+		}
+
+		// Capture request body
+		var variantUpdateInput VariantUpdateInput
+		if err := c.BindJSON(&variantUpdateInput); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
+			return
+		}
+
+		if variantUpdateInput.StockQuantity != nil {
+			variant.StockQuantity = *variantUpdateInput.StockQuantity
+		}
+		if variantUpdateInput.SKU != nil {
+			variant.SKU = *variantUpdateInput.SKU
+		}
+		if variantUpdateInput.ImageURL != nil {
+			variant.ImageURL = *variantUpdateInput.ImageURL
+		}
+		if variantUpdateInput.Weight != nil {
+			variant.Weight = *variantUpdateInput.Weight
+		}
+		if variantUpdateInput.Dimensions != nil {
+			variant.Dimensions = *variantUpdateInput.Dimensions
+		}
+		if variantUpdateInput.Color != nil {
+			variant.Color = *variantUpdateInput.Color
+		}
+		if variantUpdateInput.Size != nil {
+			variant.Size = *variantUpdateInput.Size
+		}
+
+		// Update variant in DB
+		if result := initializers.DB.Save(&variant); result.Error != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error})
+			return
+		}
+
+		// Respond sucessfully
+		c.JSON(http.StatusOK, variant)
 	case "DELETE":
 		// Create instance of variant model
 		var variant models.Variant
