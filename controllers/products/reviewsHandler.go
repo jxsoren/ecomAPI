@@ -4,7 +4,9 @@ import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +25,6 @@ type Review struct {
 }
 
 type ReviewInput struct {
-	ProductID    uint    `json:"product_id"`
 	UserID       uint    `json:"user_id"`
 	Rating       float32 `json:"rating"`
 	Title        string  `json:"title"`
@@ -53,18 +54,38 @@ func GetReviews(c *gin.Context) {
 }
 
 func CreateReview(c *gin.Context) {
-	// Create instance of review input
-	var reviewInput ReviewInput
+	// Caputre product ID from path param
+	product_id := c.Param("id")
+
+	// Convert product_id from string to int to uint
+	productID, err := strconv.ParseInt(product_id, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	} else if productID < 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+	uintProductID := uint(productID)
+
+	// Verify product from path param exists
+	var product models.Product
+	productNotFoundMessage := fmt.Sprintf("Product with product ID of %s", product_id)
+	if err := initializers.DB.First(&product, product_id); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": productNotFoundMessage})
+		return
+	}
 
 	// Capture req body
+	var reviewInput ReviewInput
 	if err := c.BindJSON(&reviewInput); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Capture review input
+	// Map review input to review model
 	review := models.Review{
-		ProductID:    reviewInput.ProductID,
+		ProductID:    uintProductID,
 		UserID:       reviewInput.UserID,
 		Rating:       reviewInput.Rating,
 		Title:        reviewInput.Title,
@@ -80,5 +101,5 @@ func CreateReview(c *gin.Context) {
 	}
 
 	// Respond successfully with created review
-	c.JSON(http.StatusOK, reviewInput)
+	c.JSON(http.StatusOK, review)
 }
