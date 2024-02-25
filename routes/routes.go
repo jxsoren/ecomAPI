@@ -55,8 +55,8 @@ func SetupRouter() *gin.Engine {
 			productRoutes.GET("/:id/reviews")
 			productRoutes.GET("/:id/reviews/:review_id")
 			productRoutes.POST("/:id/reviews", products.CreateReview)
-			productRoutes.PUT("/:id/reviews")    // ! (Admin Only)
-			productRoutes.DELETE("/:id/reviews") // ! (Admin Only)
+			productRoutes.PUT("/:id/reviews/:review_id")    // ! (Admin Only)
+			productRoutes.DELETE("/:id/reviews/:review_id") // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Search/Query products
