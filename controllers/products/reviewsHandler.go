@@ -13,17 +13,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type Review struct {
-	ProductID    uint      `json:"product_id"`
-	UserID       uint      `json:"user_id"`
-	Rating       float32   `json:"rating"`
-	Title        string    `json:"title"`
-	Content      string    `json:"content"`
-	ReviewDate   time.Time `json:"review_date"`
-	IsVerified   bool      `json:"is_verified"`
-	HelpfulCount int       `json:"helpful_count"`
-}
-
 type ReviewInput struct {
 	UserID       uint    `json:"user_id"`
 	Rating       float32 `json:"rating"`
