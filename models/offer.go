@@ -16,6 +16,6 @@ type Offer struct {
 	StartDate      time.Time `json:"start_date"`
 	EndDate        time.Time `json:"end_date"`
 	PromoCode      string    `gorm:"type:varchar(255)" json:"promo_code"`
-	MinPurchase    float64   `gorm:"type:decimal(3, 2)" json:"min_purchase"`
+	MinPurchase    float64   `gorm:"type:decimal(10, 2)" json:"min_purchase"`
 	IsActive       bool      `json:"is_active"`
 }
