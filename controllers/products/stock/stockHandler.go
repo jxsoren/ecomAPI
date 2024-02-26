@@ -75,44 +75,32 @@ func GetVariantStock(c *gin.Context) {
 
 	// Verify that product exists in DB
 	var product models.Product
-	helpers.VerifyExistence(product, product_id, c)
+	helpers.VerifyExistence(&product, product_id, c)
 
 	// Verity that variant exists in DB
 	var variant models.Variant
-	helpers.VerifyExistence(variant, variant_id, c)
+	helpers.VerifyExistence(&variant, variant_id, c)
 
 	// Respond with variant stock
 	c.JSON(http.StatusOK, gin.H{"stock_quantity": variant.StockQuantity})
 }
 
 func UpdateVariantStock(c *gin.Context) {
-	// Get variant_id from path path param
+	// Get IDs from path params
+	product_id := c.Param("id")
 	variant_id := c.Param("variant_id")
 
-	// Get product ID from path param
-	product_id := c.Param("id")
-
-	// Create instance of variant model
-	var variant models.Variant
-
-	// Create instance of product model
+	// Verify that product exists in DB
 	var product models.Product
+	helpers.VerifyExistence(&product, product_id, c)
+
+	// Verity that variant exists in DB
+	var variant models.Variant
+	helpers.VerifyExistence(&variant, variant_id, c)
 
 	// Capture req body
 	var input StockUpdateInput
 	if err := c.BindJSON(&input); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
-		return
-	}
-
-	// Verify that product exists in DB
-	if err := initializers.DB.First(&product, product_id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
-		return
-	}
-
-	// Verify that variant exists in DB
-	if err := initializers.DB.First(&variant, variant_id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
 		return
 	}
@@ -123,7 +111,7 @@ func UpdateVariantStock(c *gin.Context) {
 	}
 
 	// Update DB with new stock value
-	if result := initializers.DB.Save(&input); result.Error != nil {
+	if result := initializers.DB.Save(&variant); result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
