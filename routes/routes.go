@@ -3,6 +3,9 @@ package routes
 import (
 	"ecommerce_api/controllers"
 	"ecommerce_api/controllers/products"
+	"ecommerce_api/controllers/products/reviews"
+	"ecommerce_api/controllers/products/stock"
+	"ecommerce_api/controllers/products/variants"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,19 +33,19 @@ func SetupRouter() *gin.Engine {
 			productRoutes.DELETE("/:id", products.ProductsHandler) // ! (Admin Only)
 
 			// Product variants
-			productRoutes.GET("/:id/variants/:variant_id", products.VariantsHandler)
-			productRoutes.POST("/:id/variants", products.VariantsHandler)               // ! (Admin Only)
-			productRoutes.PUT("/:id/variants/:variant_id", products.VariantsHandler)    // ! (Admin Only)
-			productRoutes.DELETE("/:id/variants/:variant_id", products.VariantsHandler) // ! (Admin Only)
+			productRoutes.GET("/:id/variants/:variant_id", variants.VariantsHandler)
+			productRoutes.POST("/:id/variants", variants.VariantsHandler)               // ! (Admin Only)
+			productRoutes.PUT("/:id/variants/:variant_id", variants.VariantsHandler)    // ! (Admin Only)
+			productRoutes.DELETE("/:id/variants/:variant_id", variants.VariantsHandler) // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Variant inventory
-			productRoutes.GET("/:id/variants/:variant_id/stock", products.GetVariantStock)
-			productRoutes.PUT("/:id/variants/:variant_id/stock", products.UpdateVariantStock) // ! (Admin Only)
+			productRoutes.GET("/:id/variants/:variant_id/stock", stock.GetVariantStock)
+			productRoutes.PUT("/:id/variants/:variant_id/stock", stock.UpdateVariantStock) // ! (Admin Only)
 
 			// Product inventory
-			productRoutes.GET("/:id/stock", products.GetStock)
-			productRoutes.PUT("/:id/stock", products.UpdateStock) // ! (Admin Only)
+			productRoutes.GET("/:id/stock", stock.GetStock)
+			productRoutes.PUT("/:id/stock", stock.UpdateStock) // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Product offers/deals
@@ -51,12 +54,12 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: refactor & review
 			// Rating and Reviews
-			productRoutes.GET("/reviews", products.GetAllReviews)
-			productRoutes.GET("/:id/reviews", products.GetAllReivewsForProduct)
-			productRoutes.GET("/:id/reviews/:review_id", products.GetReview)
-			productRoutes.POST("/:id/reviews", products.CreateReview)
-			productRoutes.PUT("/:id/reviews/:review_id", products.UpdateReview)
-			productRoutes.DELETE("/:id/reviews/:review_id", products.DeleteReveiew) // ! (Admin Only)
+			productRoutes.GET("/reviews", reviews.GetAllReviews)
+			productRoutes.GET("/:id/reviews", reviews.GetAllReivewsForProduct)
+			productRoutes.GET("/:id/reviews/:review_id", reviews.GetReview)
+			productRoutes.POST("/:id/reviews", reviews.CreateReview)
+			productRoutes.PUT("/:id/reviews/:review_id", reviews.UpdateReview)
+			productRoutes.DELETE("/:id/reviews/:review_id", reviews.DeleteReveiew) // ! (Admin Only)
 
 			// TODO: create handlers for routes
 			// Search/Query products

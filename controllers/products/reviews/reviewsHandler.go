@@ -1,4 +1,4 @@
-package products
+package reviews
 
 import (
 	"ecommerce_api/initializers"
