@@ -3,6 +3,7 @@ package routes
 import (
 	"ecommerce_api/controllers"
 	"ecommerce_api/controllers/products"
+	"ecommerce_api/controllers/products/offers"
 	"ecommerce_api/controllers/products/reviews"
 	"ecommerce_api/controllers/products/stock"
 	"ecommerce_api/controllers/products/variants"
@@ -49,7 +50,7 @@ func SetupRouter() *gin.Engine {
 			// TODO: create handlers for routes
 			// Product offers/deals
 			productRoutes.GET("/offers")
-			productRoutes.POST("/offers")
+			productRoutes.POST("/offers", offers.CreateOffer)
 			productRoutes.PUT("/:id/offer") // ! (Admin Only)
 
 			// TODO: refactor & review
