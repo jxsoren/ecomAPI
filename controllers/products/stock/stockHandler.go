@@ -1,7 +1,8 @@
-package products
+package stock
 
 import (
 	"ecommerce_api/initializers"
+	helpers "ecommerce_api/utils"
 	"net/http"
 
 	"ecommerce_api/models"
@@ -68,29 +69,17 @@ func UpdateStock(c *gin.Context) {
 }
 
 func GetVariantStock(c *gin.Context) {
-	// Get variant_id from path param
+	// Get IDs from path params
+	product_id := c.Param("id")
 	variant_id := c.Param("variant_id")
 
-	// Get product ID from path param
-	product_id := c.Param("id")
-
-	// Create instance of variant model
-	var variant models.Variant
-
-	// Create instance of product model
-	var product models.Product
-
 	// Verify that product exists in DB
-	if err := initializers.DB.First(&product, product_id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
-		return
-	}
+	var product models.Product
+	helpers.VerifyExistence(product, product_id, c)
 
-	// Search for variant in DB
-	if err := initializers.DB.First(&variant, variant_id); err.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error})
-		return
-	}
+	// Verity that variant exists in DB
+	var variant models.Variant
+	helpers.VerifyExistence(variant, variant_id, c)
 
 	// Respond with variant stock
 	c.JSON(http.StatusOK, gin.H{"stock_quantity": variant.StockQuantity})
