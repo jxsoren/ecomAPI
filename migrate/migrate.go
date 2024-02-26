@@ -24,4 +24,8 @@ func main() {
 	if reviewsErr := initializers.DB.AutoMigrate(&models.Review{}); reviewsErr != nil {
 		log.Fatalf("Error during Reviews Table Migration. Error: %v", reviewsErr)
 	}
+
+	if offersErr := initializers.DB.AutoMigrate(&models.Offer{}); offersErr != nil {
+		log.Fatalf("Error during Reviews Table Migration. Error: %v", offersErr)
+	}
 }
