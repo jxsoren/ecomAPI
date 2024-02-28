@@ -49,8 +49,8 @@ func SetupRouter() *gin.Engine {
 
 			// TODO: create handlers for routes
 			// Product offers/deals
-			productRoutes.GET("/offers", offers.GetAllOffers)
-			productRoutes.POST("/offers", offers.CreateOffer)
+			productRoutes.GET("/offers", offers.GetAllGeneralOffers)
+			productRoutes.POST("/offers", offers.CreateGeneralOffer)
 			productRoutes.GET("/:id/offers", offers.GetOffersForProduct)
 			productRoutes.POST("/:id/offers")
 			productRoutes.PUT("/:id/offer/:offer_id")    // ! (Admin Only)

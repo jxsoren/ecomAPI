@@ -34,7 +34,7 @@ type OfferUpdateInput struct {
 	IsActive       bool      `json:"is_active"`
 }
 
-func CreateOffer(c *gin.Context) {
+func CreateGeneralOffer(c *gin.Context) {
 	// Capture request body
 	var input OfferInput
 	if err := c.BindJSON(&input); err != nil {
@@ -64,7 +64,7 @@ func CreateOffer(c *gin.Context) {
 	c.JSON(http.StatusCreated, newOffer)
 }
 
-func GetAllOffers(c *gin.Context) {
+func GetAllGeneralOffers(c *gin.Context) {
 	// Query DB for all offers
 	var offers []models.Offer
 	if result := initializers.DB.First(&offers); result.Error != nil {
@@ -92,5 +92,3 @@ func GetOffersForProduct(c *gin.Context) {
 	// Respond with all offers
 	c.JSON(http.StatusOK, offers)
 }
-
-func G
