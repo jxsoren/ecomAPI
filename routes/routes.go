@@ -53,7 +53,8 @@ func SetupRouter() *gin.Engine {
 			productRoutes.POST("/offers", offers.CreateOffer)
 			productRoutes.GET("/:id/offer")
 			productRoutes.GET("/:id/offers", offers.GetOffersForProduct)
-			productRoutes.PUT("/:id/offer") // ! (Admin Only)
+			productRoutes.PUT("/:id/offer")    // ! (Admin Only)
+			productRoutes.DELETE("/:id/offer") // ! (Admin Only)
 
 			// TODO: refactor & review
 			// Rating and Reviews
