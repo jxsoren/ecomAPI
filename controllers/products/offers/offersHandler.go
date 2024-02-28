@@ -3,6 +3,7 @@ package offers
 import (
 	"ecommerce_api/initializers"
 	"ecommerce_api/models"
+	helpers "ecommerce_api/utils"
 	"net/http"
 	"time"
 
@@ -62,3 +63,34 @@ func CreateOffer(c *gin.Context) {
 	// Respond successfully w/ created offer
 	c.JSON(http.StatusCreated, newOffer)
 }
+
+func GetAllOffers(c *gin.Context) {
+	// Query DB for all offers
+	var offers []models.Offer
+	if result := initializers.DB.First(&offers); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error})
+		return
+	}
+
+	// Respond with offers
+	c.JSON(http.StatusOK, offers)
+}
+
+func GetOffersForProduct(c *gin.Context) {
+	// Validate that product exists
+	id := c.Param("id")
+	var product models.Product
+	helpers.VerifyExistence(&product, id, c)
+
+	// Query DB for all offers for product
+	var offers []models.Offer
+	if result := initializers.DB.First(&offers); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error})
+		return
+	}
+
+	// Respond with all offers
+	c.JSON(http.StatusOK, offers)
+}
+
+func G
